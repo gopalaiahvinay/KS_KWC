@@ -1,4 +1,3 @@
-var request = require([request]);
 $(document).ready(function(){
 	$("#login-submit").off('click').on('click',function(e){
 		var userName = $("#userName").val();
@@ -27,8 +26,7 @@ $(document).ready(function(){
 		
 		
 		//request code is here
-		
-
+		var request = require([request]);
 		request({
 		  uri: "http://localhost:8081/view_editors",
 		  method: "GET",
