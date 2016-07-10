@@ -1,12 +1,15 @@
 var express = require('express');
-var app = require('express')();
+var app = express();
+var path = require('path');
+var fs = require('fs');
+app.use(express.static(path.join(__dirname, 'public')));
 
 //var app = express();
 
 //app.use(express.static('public'));
 
-app.get('/index.html', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.html" );
+app.get('/index.html', function (req, res) {  
+ res.sendFile( __dirname + "/" + "index.html" );
 })
 /*app.get('/admin-page.html', function (req, res) {
 console.log(req)
@@ -15,7 +18,7 @@ console.log(req)
 
 app.get('/Login_attempt', function (req, res) {
 
-console.log("user name and password is:",req.query.userName,req.query.password,req )
+console.log("user name and password is:",req.query.userName,req.query.password)
    // Prepare output in JSON format
 if(req.query.userName == "vishwa" && req.query.password == "vishwa"){
    /*response = {
