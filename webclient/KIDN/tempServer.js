@@ -11,25 +11,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/index.html', function (req, res) {  
  res.sendFile( __dirname + "/" + "index.html" );
 })
-/*app.get('/admin-page.html', function (req, res) {
+/*app.post('/admin-page.html', function (req, res) {
 console.log(req)
    res.sendFile( __dirname + "/" + "admin-page.html" );
 })*/
 
-app.get('/Login_attempt', function (req, res) {
+app.post('/loginattempt', function (req, res) {
 
-console.log("user name and password is:",req.query.userName,req.query.password)
+console.log("NODE SERVER:user name and password is:",req.query.userName,req.query.password)
    // Prepare output in JSON format
-if(req.query.userName == "vishwa" && req.query.password == "vishwa"){
-   /*response = {
-       first_name:req.query.userName,
-       last_name:req.query.password
-   };*/
-res.sendFile( __dirname + "/" + "admin-page.html" );
-}
+  if(req.query.userName == "v" && req.query.password == "p"){
+    console.log("Valid user");
+    //res.send( "pass" );
+    //res.redirect(__dirname + "/" + "admin-page.html");
+    res.sendFile( __dirname + "/" + "admin-page.html" );
+  }else{
+    console.log("Invalid user");
+    res.send( "fail" );
+  }
    //console.log(response);
    //res.end(JSON.stringify(response));
-})
+});
 
 var server = app.listen(8081, function () {
 

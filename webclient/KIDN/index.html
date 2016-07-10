@@ -4,21 +4,22 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="kidnWeb.css">
 <script type="text/javascript" src="jquery-3.0.0.min.js"></script>
-<!-- <script type="text/javascript" src="JS/kidForm.js"></script> -->
+<script type="text/javascript" src="kidForm.js"></script>
 <title>Title of the document</title>
 </head>
 
 <body>
+<div id="form-container">
 <h3>Welcome to Upload Kid News</h3>
-<form action="http://127.0.0.1:8081/Login_attempt" method="GET">
+
 <div class="form-field-label">User Name:</div>
-<div class="form-field-value"><input type="text" id="userName" placeholder="Please enter User name" required></div>
+<div class="form-field-value"><input type="text" id="userName" name="userName" placeholder="Please enter User name" required></div>
 <br>
 <div class="form-field-label">Password:</div>
-<div class="form-field-value"><input type="password" id="password" placeholder="Please Enter Password" required></div>
+<div class="form-field-value"><input type="password" id="password" name="password" placeholder="Please Enter Password" required></div>
 <br>
-<input id="login-submit" class="submit-btn" type="submit">
-</form> 
+<input id="login-submit" class="submit-btn" type="button" value="Submit">
+</div> 
 </body>
 
 </html>

@@ -2,8 +2,21 @@ $(document).ready(function(){
 	$("#login-submit").off('click').on('click',function(e){
 		var userName = $("#userName").val();
 		var password = $("#password").val();
-		console.log(userName);
-		//console.log(password);
+		console.log("sending req");
+		$.post("/loginattempt?userName="+userName+"&password="+password,function(data, status){
+        	//alert("Data: " + data + "\nStatus: " + status);
+        }).done(function(data){
+			//alert(data);
+			if(data=="fail"){
+				
+				alert("Login Authentication Failed, \nUser Name or Password may be wrong");
+			}else{
+				//window.location.href = "/admin-page.html";
+				alert(data);
+				$("#form-container").html(data);
+			}
+		});
+		console.log("Req NODE SERVER:user name and password is:",userName,password)
 		//Node Js evaluate user name and password
 		
 		
