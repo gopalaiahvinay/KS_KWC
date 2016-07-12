@@ -10,10 +10,13 @@ $(document).ready(function(){
 			if(data=="fail"){
 				
 				alert("Login Authentication Failed, \nUser Name or Password may be wrong");
-			}else{
-				//window.location.href = "/admin-page.html";
-				alert(data);
-				$("#form-container").html(data);
+			}
+			if(data == "pass"){
+				console.log("respond",data);
+				//alert(data);				
+				window.location.href = "/admin-page.html";
+								
+				//$("#form-container").html(data);
 			}
 		});
 		console.log("Req NODE SERVER:user name and password is:",userName,password)
