@@ -9,7 +9,7 @@ $(document).ready(function(){
 			//alert(data);
 			if(data=="fail"){
 				
-				alert("Login Authentication Failed, \nUser Name or Password may be wrong");
+				//alert("Login Authentication Failed, \nUser Name or Password may be wrong");
 			}
 			if(data == "pass"){
 				console.log("respond",data);
