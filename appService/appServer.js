@@ -21,17 +21,17 @@ if(FromNumber<totalNumberOfNewsRows){
 }
 */
 app.get('/getEntertainment', function (req, res) {
-   res.send('getEntertainment');
+	res.send('getEntertainment');
 })
 
 
 app.get('/getInternational', function (req, res) {
-   res.send('getInternational');
+   	res.send('getInternational');
 })
 
 
 app.get('/getNationalPolitics', function (req, res) {
-   res.send('getNationalPolitics');
+   	res.send('getNationalPolitics');
 })
 
 
