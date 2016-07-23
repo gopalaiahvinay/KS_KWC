@@ -97,4 +97,46 @@ $(document).ready(function(){
 	});
 
 
+	//view-editors
+	$("#view-editors").off('click').on('click',function(e){
+		$.get("/fetch-editors",function(data, status){
+			console.log("fetch-editors");
+		}).done( function(data){
+			if(data != "failed"){
+			//window.location.href = "/view-editors";
+			$("#admin-panel").hide();
+			$("#view-users").show();
+			var userTbodyTemplate = "";
+				for(i=0; i<data.length; i++){
+					var count = i+1;
+					console.log(data[i]._id);
+					userTbodyTemplate += "<tr><td>"+count+"</td><td>"+data[i].userName+"</td><td>"+data[i].userEmail+"</td><td class='delete-user' data-email='"+data[i].userEmail+"' data-id='"+data[i]._id+"'></td></tr>";
+				}
+			$("#users-tbody").html(userTbodyTemplate);
+
+			$(".delete-user").off('click').on('click',function(e){
+				var userEmail = $(e.target).data("email");
+				var id = $(e.target).data("id");
+				var row = $(e.target).parent();
+				$.post("/delete-user?id="+id, function(data,status){
+
+				}).done(function (data){
+					if(data == "deleted"){
+						$(".error-pan").text("User of Email Id:"+userEmail+" Deleted from Editors list.");
+						$(row).remove();
+					}
+				});
+			});
+			}
+		});
+
+	});
+
+	$("#view-editors-back-button").off('click').on('click',function(e){
+		$("#admin-panel").show();
+		$("#view-users").hide();
+	});
+
+	
+
 });

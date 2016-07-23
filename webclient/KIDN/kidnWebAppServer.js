@@ -15,131 +15,211 @@ var MongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017/kidn';
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret:'01234523s4534545',
-//		 name: cookie_name,
-//		 store: sessionStore,
-		 proxy: true,
-		 resave: true,
-		 saveUninitialized: true}));
+app.use(session({
+    secret: '01234523s4534545',
+    //     name: cookie_name,
+    //     store: sessionStore,
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 var sess;
 
-app.get('/index.html', function (req, res) {  
+app.get('/index.html', function(req, res) {
 
- res.sendFile( __dirname + "/" + "index.html" );
+    res.sendFile(__dirname + "/" + "index.html");
 });
 
-app.get('/admin-page.html', function (req, res) {
-  sess = req.session;
-  if(sess.kidnValidSess){
-     res.sendFile( __dirname + "/" + "admin-page.html" );}
-  else{
-  	res.sendFile( __dirname + "/" + "index.html" );}
+app.get('/admin-page.html', function(req, res) {
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        res.sendFile(__dirname + "/" + "admin-page.html");
+    } else {
+        res.sendFile(__dirname + "/" + "index.html");
+    }
 });
 
 
 /*LOGIN Attempt*/
-app.post('/loginattempt', function (req, res) {
+app.post('/loginattempt', function(req, res) {
 
-//console.log("NODE SERVER:user name and password is:",req.query.userName,req.query.password)
+    //console.log("NODE SERVER:user name and password is:",req.query.userName,req.query.password)
 
 
-  MongoClient.connect(url, function (err, db) {
-  if (err) {
-    console.log('Unable to connect to the mongoDB server. Error:', err);
-  } else {
-    //HURRAY!! We are connected. :)
-    console.log('Connection established to', url);
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+            //HURRAY!! We are connected. :)
+            console.log('Connection established to', url);
 
-    // Get the documents collection
-    var collection = db.collection('users');
+            // Get the documents collection
+            var collection = db.collection('users');
 
-    // Insert some users
-    return collection.find({userEmail:req.query.userName}).toArray(function (err, result) {
-      if (err) {
-        console.log(err);
-      } else if (result.length) {
-        console.log('Found:', result[0].password);
-        if(req.query.password == result[0].password){
-          console.log("valid user");
-          //sess.password = req.query.password;
-          sess = req.session;
-          sess.kidnValidSess = true;
-          res.send("pass");
-        }else{
-          console.log("Invalid user");
-          res.send("fail");
+            // Insert some users
+            return collection.find({
+                userEmail: req.query.userName
+            }).toArray(function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else if (result.length) {
+                    console.log('Found:', result[0].password);
+                    if (req.query.password == result[0].password) {
+                        console.log("valid user");
+                        //sess.password = req.query.password;
+                        sess = req.session;
+                        sess.kidnValidSess = true;
+                        res.send("pass");
+                    } else {
+                        console.log("Invalid user");
+                        res.send("fail");
+                    }
+                } else {
+                    console.log('No document(s) found with defined "find" criteria!');
+                }
+                //Close connection
+                db.close();
+            });
         }
-      } else {
-        console.log('No document(s) found with defined "find" criteria!');
-      }
-      //Close connection
-      db.close();
     });
-  }
-});
 
 });
 
 //Create Editors 
-app.get('/create-editors', function (req, res) {
-  sess = req.session;
-  if(sess.kidnValidSess){
-     res.sendFile( __dirname + "/" + "create-editors.html" );}
-  else{
-    res.sendFile( __dirname + "/" + "index.html" );}
+app.get('/create-editors', function(req, res) {
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        res.sendFile(__dirname + "/" + "create-editors.html");
+    } else {
+        res.sendFile(__dirname + "/" + "index.html");
+    }
 });
 
 //save-new-editor
-app.post('/save-new-editor', function (req, res) {
+app.post('/save-new-editor', function(req, res) {
 
-//console.log("NODE SERVER:user name and password is:",req.query.userName,req.query.password)
+    //console.log("NODE SERVER:user name and password is:",req.query.userName,req.query.password)
+    sess = req.session;
+    if (sess.kidnValidSess) {
 
-
-  MongoClient.connect(url, function (err, db) {
-  if (err) {
-    console.log('Unable to connect to the mongoDB server. Error:', err);
-  } else {
-    //HURRAY!! We are connected. :)
-    console.log('Connection established to', url);
-    var user = {"userName":req.query.userName, "userEmail":req.query.emailId, "password":req.query.password, "role":req.query.role};
-    // Get the documents collection
-    var collection = db.collection('users');
-    collection.find({userEmail:req.query.emailId}).toArray(function (err, result) {
-      if (err) {
-        console.log(err);
-      }else if (result.length) {
-        db.close();
-        res.send("user-exist");
-        console.log("EXITST:",result.length);
-      }else if(result.length == 0){
-        collection.insert(user, function (err, result) {
-          if (err) {
-            console.log(err);
-            res.send("failed");
-          } else {
-            console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
-            res.send("success");
-          }
-          //Close connection
-          db.close();
+        MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+            } else {
+                //HURRAY!! We are connected. :)
+                console.log('Connection established to', url);
+                var user = {
+                    "userName": req.query.userName,
+                    "userEmail": req.query.emailId,
+                    "password": req.query.password,
+                    "role": req.query.role
+                };
+                // Get the documents collection
+                var collection = db.collection('users');
+                collection.find({
+                    userEmail: req.query.emailId
+                }).toArray(function(err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else if (result.length) {
+                        db.close();
+                        res.send("user-exist");
+                        console.log("EXITST:", result.length);
+                    } else if (result.length == 0) {
+                        collection.insert(user, function(err, result) {
+                            if (err) {
+                                console.log(err);
+                                res.send("failed");
+                            } else {
+                                console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+                                res.send("success");
+                            }
+                            //Close connection
+                            db.close();
+                        });
+                    }
+                });
+            }
         });
-      }
-
-    });
-
-          
+    }else {
+        res.sendFile(__dirname + "/" + "index.html");
     }
-  });
 });
 
-var server = app.listen(8081, function () {
+app.get("/fetch-editors", function(req, res) {
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+            } else {
+                var collection = db.collection('users');
 
-  var host = server.address().address
-  var port = server.address().port
+            collection.find({}).toArray(function(err, result) {
+                if (err) {
+                    console.log(err);
+                    res.send("failed");
+                } else if (result.length) {
+                    res.send(result);                   
+                } else {
+                    console.log('No document(s) found with defined "find" criteria!');
+                    res.send("failed");
+                }
+                //Close connection
+                db.close();
+            });
+            }
+        });
+    } else {
+        res.sendFile(__dirname + "/" + "index.html");
+    }
+});
 
-  console.log("Example app listening at http://%s:%s", host, port)
+app.get('/view-editors', function(req, res) {
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        res.sendFile(__dirname + "/" + "view-editors.html");
+    } else {
+        res.sendFile(__dirname + "/" + "index.html");
+    }
+});
 
-})
+app.post('/delete-user', function(req, res){
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+            } else {
+                 var collection = db.collection('users');
+                 collection.deleteOne({_id: new mongodb.ObjectID(req.query.id)}, function(err, results) {
+                       if (err){
+                         console.log("failed deleting user");
+                         //throw err;
+                       }else{
+                         console.log("successfully deleted user");
+                         res.send("deleted");
+                       } 
+                });
+                db.close();
+            }
+        });
+    } else {
+        res.sendFile(__dirname + "/" + "index.html");
+    }
+
+});
+
+var server = app.listen(8081, function() {
+
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log("Example app listening at http://%s:%s", host, port)
+
+});

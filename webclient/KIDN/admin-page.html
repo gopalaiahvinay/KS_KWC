@@ -8,10 +8,30 @@
 <title>Admin Options</title>
 </head>
 <body>
-<div>
+<div id="admin-panel">
 <h3>* <a href="/create-editors">Create Editors</a></h3>
 <h3>* <a id="view-editors" href="javascript:void(0);">View Editors</a></h3>
 <h3>* <a id="upload-content"  href="javascript:void(0);">Upload Content as an Editor</a></h3>
 </div>
+
+<div id="view-users" style="display:none;">
+	<h3 id="view-users-headline">~: Existing - Editors :~</h3>
+<a id="view-editors-back-button" href="javascript:void(0);">↵ Back</a>
+<div class="error-pan"></div>
+<table id="users-table">
+<thead id="users-thead">
+	<tr>
+		<th>Serial Num</th>
+		<th>User Name</th>
+		<th>Email ID</th>
+		<th>Delete User</th>
+	</tr>
+</thead>
+<tbody id="users-tbody">
+	
+</tbody>
+</table>
+</div>
+
 </body>
 </html>

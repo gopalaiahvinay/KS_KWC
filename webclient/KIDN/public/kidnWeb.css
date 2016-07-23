@@ -42,3 +42,47 @@ h3 {
 #create-edit-back-button{
 	margin: 3% 0% 0% 32%;
 }
+
+#users-table{
+	margin: 3% 0% 0% 26%;
+    border: solid 2px;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+#users-table thead{
+	background: black;
+	color: white;
+}
+
+#users-table th{
+	border: solid 2px black;
+	text-align: center;
+    padding: 5px 30px;
+}
+
+#users-table td{
+	border: solid 1px;
+    text-align: center;
+    padding: 5px 20px;
+}
+
+#view-users-headline{
+	font-size: xx-large;
+	margin: 3% 0% 0% 36%;
+}
+
+.delete-user{
+	background-image: url(../images/delete-user.png);
+    background-repeat: no-repeat;
+    background-position: center;
+	cursor: pointer;
+}
+
+.delete-user:hover{
+	background-color: red;
+}
+
+#view-editors-back-button{
+    margin: 2% 0% 0% 26%;
+    font-size: x-large;
+}
