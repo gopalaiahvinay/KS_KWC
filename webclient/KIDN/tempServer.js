@@ -29,16 +29,15 @@ var sess;
 app.get('/index.html', function (req, res) {  
 
  res.sendFile( __dirname + "/" + "index.html" );
-})
+});
+
 app.get('/admin-page.html', function (req, res) {
-   //console.log(req)
-console.log(sess);
-sess = req.session;
-if(sess.kidnValidSess){
-   res.sendFile( __dirname + "/" + "admin-page.html" );}
-else{
-	res.sendFile( __dirname + "/" + "index.html" );}
-})
+  sess = req.session;
+  if(sess.kidnValidSess){
+     res.sendFile( __dirname + "/" + "admin-page.html" );}
+  else{
+  	res.sendFile( __dirname + "/" + "index.html" );}
+});
 
 
 /*LOGIN Attempt*/
@@ -84,6 +83,57 @@ app.post('/loginattempt', function (req, res) {
 
 });
 
+//Create Editors 
+app.get('/create-editors', function (req, res) {
+  sess = req.session;
+  if(sess.kidnValidSess){
+     res.sendFile( __dirname + "/" + "create-editors.html" );}
+  else{
+    res.sendFile( __dirname + "/" + "index.html" );}
+});
+
+//save-new-editor
+app.post('/save-new-editor', function (req, res) {
+
+//console.log("NODE SERVER:user name and password is:",req.query.userName,req.query.password)
+
+
+  MongoClient.connect(url, function (err, db) {
+  if (err) {
+    console.log('Unable to connect to the mongoDB server. Error:', err);
+  } else {
+    //HURRAY!! We are connected. :)
+    console.log('Connection established to', url);
+    var user = {"userName":req.query.userName, "userEmail":req.query.emailId, "password":req.query.password, "role":req.query.role};
+    // Get the documents collection
+    var collection = db.collection('users');
+    collection.find({userEmail:req.query.emailId}).toArray(function (err, result) {
+      if (err) {
+        console.log(err);
+      }else if (result.length) {
+        db.close();
+        res.send("user-exist");
+        console.log("EXITST:",result.length);
+      }else if(result.length == 0){
+        collection.insert(user, function (err, result) {
+          if (err) {
+            console.log(err);
+            res.send("failed");
+          } else {
+            console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.length, result);
+            res.send("success");
+          }
+          //Close connection
+          db.close();
+        });
+      }
+
+    });
+
+          
+    }
+  });
+});
 
 var server = app.listen(8081, function () {
 

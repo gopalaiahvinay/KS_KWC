@@ -1,3 +1,7 @@
+body{
+	background: #B0C4DE;
+}
+
 h3 {
 	margin: 3% 0% 0% 32%;
 }
@@ -8,11 +12,33 @@ h3 {
 	width: 77px;
 }
 
+.form-field-label.first{
+	margin: 1% 0% 0% 32%;
+}
+
 .form-field-value{
 	display: inline-block;
 	margin: 3% 0% 0% 0%;
 }
 
+.form-field-value.first{
+	margin: 1% 0% 0% 0%;
+}
+
+
 .submit-btn{
 	margin: 3% 0% 0% 40%;
+}
+
+#crate-user-submit{
+	margin: 3% 0% 0% 12%;
+}
+
+.error-pan{
+	margin: 1% 0% 0% 32%;
+	color: red;
+}
+
+#create-edit-back-button{
+	margin: 3% 0% 0% 32%;
 }

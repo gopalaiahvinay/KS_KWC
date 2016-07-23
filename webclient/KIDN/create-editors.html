@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="kidnWeb.css">
-<script type="text/javascript" src="lib/require.js"></script>
-<script type="text/javascript" src="lib/jquery-3.0.0.min.js"></script>
-<script type="text/javascript" src="JS/kidForm.js"></script>
+<script type="text/javascript" src="jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="kidForm.js"></script>
 <title>Title of the document</title>
 </head>
 
 <body>
 <h3>Create New Edior</h3>
-<form action="admin-page.html">
-<div class="form-field-label">User Name:</div>
-<div class="form-field-value"><input type="text" id="userName" placeholder="Please enter User name" required></div>
+<div>
+<div class="error-pan"></div>
+<div class="form-field-label first">User Name:</div>
+<div class="form-field-value first"><input type="text" id="userName" placeholder="Please enter User name" required></div>
 <br>
 <div class="form-field-label">Email ID:</div>
 <div class="form-field-value"><input type="text" id="emailId" placeholder="Please enter Email Id" required></div>
@@ -21,16 +21,20 @@
 <div class="form-field-label">Password:</div>
 <div class="form-field-value"><input type="password" id="password" placeholder="Please Enter Password" required></div>
 <br>
+<div class="form-field-label">Re-Enter Password:</div>
+<div class="form-field-value"><input type="password" id="repassword" placeholder="Please Re-Enter Password" required></div>
+<br>
 <div class="form-field-label">Role:</div>
 <div class="form-field-value">
 <select type="text" id="role" required>
-<option value="newsreader">News Reader</option>
-<option value="newswriter">News Writer</option>
+<option value="News Reader" selected="selected">News Reader</option>
+<option value="News Writer">News Writer</option>
 </select>
 </div>
 <br>
-<input id="crate-user-submit" class="submit-btn" type="submit">
-</form> 
+<a id="create-edit-back-button" href="/admin-page.html">Back</a>
+<input id="crate-user-submit" class="submit-btn" type="button" value="Submit">
+</div> 
 </body>
 
 </html>
