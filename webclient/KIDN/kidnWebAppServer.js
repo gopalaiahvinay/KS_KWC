@@ -199,14 +199,16 @@ app.post('/delete-user', function(req, res){
                  var collection = db.collection('users');
                  collection.deleteOne({_id: new mongodb.ObjectID(req.query.id)}, function(err, results) {
                        if (err){
-                         console.log("failed deleting user");
+                         console.log("failed deleting user Id:"+req.query.id);
                          //throw err;
+                         console.log("error is:"+err);
+                         db.close();
                        }else{
-                         console.log("successfully deleted user");
+                         console.log("successfully deleted user Id:"+req.query.id);
                          res.send("deleted");
+                         db.close();
                        } 
-                });
-                db.close();
+                });     
             }
         });
     } else {
