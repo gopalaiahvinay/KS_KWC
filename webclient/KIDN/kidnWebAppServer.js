@@ -159,8 +159,8 @@ app.get("/fetch-editors", function(req, res) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
                 var collection = db.collection('users');
-
-            collection.find({}).toArray(function(err, result) {
+            //fetching without admin role
+            collection.find({role:{$ne:"admin"}}).toArray(function(err, result) {
                 if (err) {
                     console.log(err);
                     res.send("failed");
