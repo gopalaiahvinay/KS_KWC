@@ -12,7 +12,6 @@ var MongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017/kidn';
 
 
-//example added to test to connect mongo
 // Import events module
 var events = require('events');
 // Create an eventEmitter object
