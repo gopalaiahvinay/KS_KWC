@@ -1,17 +1,54 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="kidnWeb.css">
-<script type="text/javascript" src="lib/require.js"></script>
-<script type="text/javascript" src="lib/jquery-3.0.0.min.js"></script>
-<script type="text/javascript" src="JS/kidForm.js"></script>
-<title>Title of the document</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="kidnWeb.css">
+    <script type="text/javascript" src="/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="/kidForm.js"></script>
+    <title>Title of the document</title>
 </head>
 
 <body>
-<h3>Upload Content.. Dev In Progress!</h3>
-
+    <h3>Create New Edior</h3>
+    <div>
+        <div class="error-pan"></div>
+        <div class="form-field-label first">Category :</div>
+        <div class="form-field-value">
+            <select type="text" id="category" required>
+                <option value="InternationalContents" selected="selected">International</option>
+                <option value="NationalPoliticalContents">National Political</option>
+                <option value="NationalSocialContents">National-Social</option>
+                <option value="EntertainmentContents">Entertainment</option>
+                <option value="ScienceAndTechContents">Science-and-Tech</option>
+                <option value="SportsContents">Sports.</option>
+            </select>
+        </div>
+        <br>
+        <div class="form-field-label">Choose Media</div>
+        <div class="form-field-value">
+            <select id="choose-media" required>
+                <option value="image" selected="selected">Image</option>
+                <option value="video">Video</option>
+            </select>
+        </div>
+        <br>
+        <div id="file-upload-label" class="form-field-label">Image:</div>
+        <div id="file-upload-content" class="form-field-value"><input id="uploaded-image" type="file" name="pic" accept="image/*"></div>
+        <br>
+        <div class="form-field-label">Title Of News</div>
+        <div class="form-field-value">
+            <input type="text" id="news-title" placeholder="Enter News Title" maxlength="255" required> </div>
+        <br>
+        <div class="form-field-label">Description</div>
+        <div class="form-field-value">
+            <textarea id="description" placeholder="Enter Description" maxlength="1500"  rows="10" cols="100" required>
+            </textarea>
+        </div>
+        <br>
+        <a id="create-edit-back-button" href="/admin-page.html">↵ Back</a>
+        <input id="file-upload-submit" class="submit-btn" type="button" value="Submit"> </div>
+        <div id="output"/>
 </body>
 
 </html>

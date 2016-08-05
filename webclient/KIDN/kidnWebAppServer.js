@@ -90,7 +90,7 @@ app.post('/loginattempt', function(req, res) {
 
 });
 
-//Create Editors 
+//Create Editors
 app.get('/create-editors', function(req, res) {
     sess = req.session;
     if (sess.kidnValidSess) {
@@ -146,7 +146,7 @@ app.post('/save-new-editor', function(req, res) {
                 });
             }
         });
-    }else {
+    } else {
         res.sendFile(__dirname + "/" + "index.html");
     }
 });
@@ -159,20 +159,24 @@ app.get("/fetch-editors", function(req, res) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
                 var collection = db.collection('users');
-            //fetching without admin role
-            collection.find({role:{$ne:"admin"}}).toArray(function(err, result) {
-                if (err) {
-                    console.log(err);
-                    res.send("failed");
-                } else if (result.length) {
-                    res.send(result);                   
-                } else {
-                    console.log('No document(s) found with defined "find" criteria!');
-                    res.send("failed");
-                }
-                //Close connection
-                db.close();
-            });
+                //fetching without admin role
+                collection.find({
+                    role: {
+                        $ne: "admin"
+                    }
+                }).toArray(function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        res.send("failed");
+                    } else if (result.length) {
+                        res.send(result);
+                    } else {
+                        console.log('No document(s) found with defined "find" criteria!');
+                        res.send("failed");
+                    }
+                    //Close connection
+                    db.close();
+                });
             }
         });
     } else {
@@ -189,33 +193,85 @@ app.get('/view-editors', function(req, res) {
     }
 });
 
-app.post('/delete-user', function(req, res){
+app.post('/delete-user', function(req, res) {
     sess = req.session;
     if (sess.kidnValidSess) {
         MongoClient.connect(url, function(err, db) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
-                 var collection = db.collection('users');
-                 collection.deleteOne({_id: new mongodb.ObjectID(req.query.id)}, function(err, results) {
-                       if (err){
-                         console.log("failed deleting user Id:"+req.query.id);
-                         //throw err;
-                         console.log("error is:"+err);
-                         db.close();
-                       }else{
-                         console.log("successfully deleted user Id:"+req.query.id);
-                         res.send("deleted");
-                         db.close();
-                       } 
-                });     
+                var collection = db.collection('users');
+                collection.deleteOne({
+                    _id: new mongodb.ObjectID(req.query.id)
+                }, function(err, results) {
+                    if (err) {
+                        console.log("failed deleting user Id:" + req.query.id);
+                        //throw err;
+                        console.log("error is:" + err);
+                        db.close();
+                    } else {
+                        console.log("successfully deleted user Id:" + req.query.id);
+                        res.send("deleted");
+                        db.close();
+                    }
+                });
             }
         });
     } else {
         res.sendFile(__dirname + "/" + "index.html");
     }
-
 });
+
+app.get('/upload-content-page', function(req, res) {
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        res.sendFile(__dirname + "/" + "upload-content.html");
+    } else {
+        res.sendFile(__dirname + "/" + "index.html");
+    }
+});
+
+app.post('/uploading-content', function(req, res) {
+    sess = req.session;
+    if (sess.kidnValidSess) {
+        //console.log(JSON.stringify(req.body));
+        //console.log(req.body.category);
+        MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+            } else {
+                //TODOD: Different Collection  var collectionName = String(req.query.category);
+                var collection = db.collection('contentCollections');
+
+                var content = {
+                    'category': req.body.category,
+                    'mediaType': req.body.mediaType,
+                    'newsTitle': req.body.newsTitle,
+                    'description': req.body.description,
+                    'videoUrl': req.body.videoUrl,
+                    'mediaType': req.body.mediaType
+                }
+
+                collection.insert(content, function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        res.send("failed");
+                        db.close();
+                    } else {
+                        console.log("Inserted content");
+                        res.send("success");
+                        db.close();
+                    }
+                });
+            }
+        });
+
+    } else {
+        //  res.sendFile(__dirname + "/" + "index.html");
+        res.send('fail');
+    }
+});
+
 
 var server = app.listen(8081, function() {
 
