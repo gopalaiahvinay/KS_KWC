@@ -4,6 +4,11 @@ var bodyParser = require('body-parser');
 var app = express();
 var path = require('path');
 var fs = require('fs');
+var crypto = require('crypto');
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -240,6 +245,8 @@ app.post('/uploading-content', function(req, res) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
+
+                if(req.body.mediaType == 'video'){
                 //TODOD: Different Collection  var collectionName = String(req.query.category);
                 var collection = db.collection('contentCollections');
 
@@ -248,8 +255,7 @@ app.post('/uploading-content', function(req, res) {
                     'mediaType': req.body.mediaType,
                     'newsTitle': req.body.newsTitle,
                     'description': req.body.description,
-                    'videoUrl': req.body.videoUrl,
-                    'mediaType': req.body.mediaType
+                    'videoUrl': req.body.videoUrl
                 }
 
                 collection.insert(content, function(err, result) {
@@ -263,11 +269,60 @@ app.post('/uploading-content', function(req, res) {
                         db.close();
                     }
                 });
+
+              }else{
+                  console.log(req.body.image);
+                  var base64Image = req.body.image;
+
+                  var matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/), base64ImageResponse ={};
+
+                 if (matches.length !== 3) {
+                   return new Error('Invalid input string');
+                 }
+
+                 base64ImageResponse.type = matches[1];
+                 console.log(base64ImageResponse.type);
+                 var fileFormat ="."+ base64ImageResponse.type.substring(6, base64ImageResponse.type.length);
+                 base64ImageResponse.data = new Buffer(matches[2], 'base64');
+                 var hash = crypto.createHash('md5').update(base64ImageResponse.data).digest('hex');
+                 var fileName = hash + fileFormat;
+                 console.log(hash);
+                 require("fs").writeFile("public/uploaded-images/"+fileName, base64ImageResponse.data, 'base64', function(err) {
+                      if(err){
+                        console.log(err);
+                      }else{
+                        console.log("uploaded successfully");
+                      }
+                });
+
+                var collection = db.collection('contentCollections');
+
+                var content = {
+                    'category': req.body.category,
+                    'mediaType': req.body.mediaType,
+                    'newsTitle': req.body.newsTitle,
+                    'description': req.body.description,
+                    'imageName': fileName
+                }
+
+                collection.insert(content, function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        res.send("failed");
+                        db.close();
+                    } else {
+                        console.log("Inserted content");
+                        res.send("success");
+                        db.close();
+                    }
+                });
+
+              }
             }
         });
 
     } else {
-        //  res.sendFile(__dirname + "/" + "index.html");
+         res.sendFile(__dirname + "/" + "index.html");
         res.send('fail');
     }
 });

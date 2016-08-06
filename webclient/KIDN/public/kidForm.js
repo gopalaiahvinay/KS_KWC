@@ -148,7 +148,7 @@ $(document).ready(function() {
 		}*/
 
         if (mediaType == 'video') {
-            alert(category);
+            //alert(category);
             var videoUrl = $("#uploaded-video-url").val();
             var data = {
                 'category': category,
@@ -168,12 +168,81 @@ $(document).ready(function() {
                 dataType: 'json',
                 //Ajax events
                 success: function(data) {
-                    alert(String(data));
+                  //  alert(String(data));
+                  if(data.responseText == "success" || data.status == 413){
+                    alert(data.status+" Uploaded Content successfully");
+                  }else{
+                    alert(data.responseText);
+                  }
                 },
                 error: function(data) {
-                    alert(String(data));
+                  //  alert(String(data));
+                  if(data.responseText == "success" || data.status == 413){
+                    alert(data.status+" Uploaded Content successfully");
+                  }else{
+                    alert(data.responseText);
+                  }
                 },
+                complete: function(){
+                  $("#uploaded-image").val("");
+                  $('input[type=text], textarea').val("");
+                }
             });
+        }else{
+
+          var data = {
+              'category': category,
+              'mediaType': mediaType,
+              'newsTitle': newsTitle,
+              'description': description,
+              'videoUrl': videoUrl,
+              'mediaType': mediaType
+          };
+          //alert(category);
+          var image = document.querySelector('input[type=file]').files[0];
+          //$("#uploaded-image");
+          var reader  = new FileReader();
+          reader.readAsDataURL(image);
+
+          reader.addEventListener("load", function () {
+          //  alert(reader.result);
+            data["image"] = reader.result;
+            $.ajax({
+                url: 'uploading-content', //Server script to process data
+                type: 'POST',
+
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                //contentType: "application/x-www-form-urlencoded",
+                dataType: 'json',
+                //Ajax events
+                success: function(data) {
+                  //  alert(String(data));
+                  if(data.responseText == "success" || data.status == 413){
+                    alert(data.status+" Uploaded Content successfully");
+                  }else{
+                    alert(data.responseText);
+                  }
+                },
+                error: function(data) {
+                  //  alert(String(data));
+                  if(data.responseText == "success" || data.status == 413){
+                    alert(data.status+" Uploaded Content successfully");
+                  }else{
+                    alert(data.responseText);
+                  }
+                },
+                complete: function(){
+                  $("#uploaded-image").val("");
+                  $('input[type=text], textarea').val("");
+                }
+            });
+          }, false);
+
+
+
+
+
         }
     });
 
