@@ -310,7 +310,6 @@ app.post('/uploading-content', function(req, res) {
                     });
 
                 } else {
-                    console.log(req.body.image);
                     var base64Image = req.body.image;
 
                     var matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
@@ -321,12 +320,12 @@ app.post('/uploading-content', function(req, res) {
                     }
 
                     base64ImageResponse.type = matches[1];
-                    console.log(base64ImageResponse.type);
+                    //console.log(base64ImageResponse.type);
                     var fileFormat = "." + base64ImageResponse.type.substring(6, base64ImageResponse.type.length);
                     base64ImageResponse.data = new Buffer(matches[2], 'base64');
                     var hash = crypto.createHash('md5').update(base64ImageResponse.data).digest('hex');
                     var fileName = hash + fileFormat;
-                    console.log(hash);
+                    //console.log(hash);
                     var photoFolder = req.body.category;
                     require("fs").writeFile("public/uploaded-images/" + photoFolder + "/" + fileName, base64ImageResponse.data, 'base64', function(err) {
                         if (err) {
