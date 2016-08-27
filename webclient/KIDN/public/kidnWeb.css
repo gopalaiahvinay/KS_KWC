@@ -9,7 +9,11 @@ h3 {
 .form-field-label{
 	display: inline-block;
 	margin: 3% 0% 0% 32%;
-	width: 77px;
+	width: 150px;
+}
+
+.form-field-label.description{
+	vertical-align: top;
 }
 
 .form-field-label.first{
@@ -85,4 +89,9 @@ h3 {
 #view-editors-back-button{
     margin: 2% 0% 0% 26%;
     font-size: x-large;
+}
+
+#logout-div{
+	  float: right;
+    margin-right: 35%;
 }

@@ -10,7 +10,10 @@
 </head>
 
 <body>
-    <h3>Create New Edior</h3>
+  <div id="logout-div">
+  	<input id="logout" type="button" value="logout">
+  </div>
+    <h3>Create New Content</h3>
     <div>
         <div class="error-pan"></div>
         <div class="form-field-label first">Category :</div>
@@ -25,7 +28,7 @@
             </select>
         </div>
         <br>
-        <div class="form-field-label">Choose Media</div>
+        <div class="form-field-label">Choose Media:</div>
         <div class="form-field-value">
             <select id="choose-media" required>
                 <option value="image" selected="selected">Image</option>
@@ -36,11 +39,11 @@
         <div id="file-upload-label" class="form-field-label">Image:</div>
         <div id="file-upload-content" class="form-field-value"><input id="uploaded-image" type="file" name="pic" accept="image/*"></div>
         <br>
-        <div class="form-field-label">Title Of News</div>
+        <div class="form-field-label">News Title:</div>
         <div class="form-field-value">
             <input type="text" id="news-title" placeholder="Enter News Title" maxlength="255" required> </div>
         <br>
-        <div class="form-field-label">Description</div>
+        <div class="form-field-label description">Description:</div>
         <div class="form-field-value">
             <textarea id="description" placeholder="Enter Description" maxlength="1500"  rows="10" cols="100" required>
             </textarea>

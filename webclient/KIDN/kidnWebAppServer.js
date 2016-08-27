@@ -7,8 +7,13 @@ var fs = require('fs');
 var crypto = require('crypto');
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
+app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    extended: true
+}));
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -43,7 +48,11 @@ app.get('/index.html', function(req, res) {
 app.get('/admin-page.html', function(req, res) {
     sess = req.session;
     if (sess.kidnValidSess) {
-        res.sendFile(__dirname + "/" + "admin-page.html");
+        if (sess.admin == true) {
+            res.sendFile(__dirname + "/" + "admin-page.html");
+        } else {
+            res.sendFile(__dirname + "/" + "upload-content.html");
+        }
     } else {
         res.sendFile(__dirname + "/" + "index.html");
     }
@@ -79,6 +88,9 @@ app.post('/loginattempt', function(req, res) {
                         //sess.password = req.query.password;
                         sess = req.session;
                         sess.kidnValidSess = true;
+                        if (result[0].role == "admin") {
+                            sess.admin = true;
+                        }
                         res.send("pass");
                     } else {
                         console.log("Invalid user");
@@ -95,10 +107,17 @@ app.post('/loginattempt', function(req, res) {
 
 });
 
+//Loout  Handler
+app.get('/logout', function(req, res) {
+    sess = null;
+    req.session.destroy(); //ends the session in express node
+    res.send("logout successfully");
+});
+
 //Create Editors
 app.get('/create-editors', function(req, res) {
     sess = req.session;
-    if (sess.kidnValidSess) {
+    if (sess.kidnValidSess && sess.admin) {
         res.sendFile(__dirname + "/" + "create-editors.html");
     } else {
         res.sendFile(__dirname + "/" + "index.html");
@@ -191,7 +210,7 @@ app.get("/fetch-editors", function(req, res) {
 
 app.get('/view-editors', function(req, res) {
     sess = req.session;
-    if (sess.kidnValidSess) {
+    if (sess.kidnValidSess && sess.admin) {
         res.sendFile(__dirname + "/" + "view-editors.html");
     } else {
         res.sendFile(__dirname + "/" + "index.html");
@@ -245,94 +264,108 @@ app.post('/uploading-content', function(req, res) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
-
-                if(req.body.mediaType == 'video'){
-                //TODOD: Different Collection  var collectionName = String(req.query.category);
-                var collection = db.collection('contentCollections');
-
-                var content = {
-                    'category': req.body.category,
-                    'mediaType': req.body.mediaType,
-                    'newsTitle': req.body.newsTitle,
-                    'description': req.body.description,
-                    'videoUrl': req.body.videoUrl
+                //Choosing Different Type of Collection
+                switch (req.body.category) {
+                    case "InternationalContents":
+                        var collection = db.collection('InternationalContents');
+                        break;
+                    case "NationalPoliticalContents":
+                        var collection = db.collection('NationalPoliticalContents');
+                        break;
+                    case "NationalSocialContents":
+                        var collection = db.collection('NationalSocialContents');
+                        break;
+                    case "EntertainmentContents":
+                        var collection = db.collection('EntertainmentContents');
+                        break;
+                    case "ScienceAndTechContents":
+                        var collection = db.collection('ScienceAndTechContents');
+                        break;
+                    case "SportsContents":
+                        var collection = db.collection('SportsContents');
+                        break;
+                    default:
+                        var collection = db.collection('ContentCollections');
                 }
+                if (req.body.mediaType == 'video') {
 
-                collection.insert(content, function(err, result) {
-                    if (err) {
-                        console.log(err);
-                        res.send("failed");
-                        db.close();
-                    } else {
-                        console.log("Inserted content");
-                        res.send("success");
-                        db.close();
+                    var content = {
+                        'category': req.body.category,
+                        'mediaType': req.body.mediaType,
+                        'newsTitle': req.body.newsTitle,
+                        'description': req.body.description,
+                        'videoUrl': req.body.videoUrl
                     }
-                });
 
-              }else{
-                  console.log(req.body.image);
-                  var base64Image = req.body.image;
+                    collection.insert(content, function(err, result) {
+                        if (err) {
+                            console.log(err);
+                            res.send("failed");
+                            db.close();
+                        } else {
+                            console.log("Inserted content");
+                            res.send("success");
+                            db.close();
+                        }
+                    });
 
-                  var matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/), base64ImageResponse ={};
+                } else {
+                    console.log(req.body.image);
+                    var base64Image = req.body.image;
 
-                 if (matches.length !== 3) {
-                   return new Error('Invalid input string');
-                 }
+                    var matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+                        base64ImageResponse = {};
 
-                 base64ImageResponse.type = matches[1];
-                 console.log(base64ImageResponse.type);
-                 var fileFormat ="."+ base64ImageResponse.type.substring(6, base64ImageResponse.type.length);
-                 base64ImageResponse.data = new Buffer(matches[2], 'base64');
-                 var hash = crypto.createHash('md5').update(base64ImageResponse.data).digest('hex');
-                 var fileName = hash + fileFormat;
-                 console.log(hash);
-                 require("fs").writeFile("public/uploaded-images/"+fileName, base64ImageResponse.data, 'base64', function(err) {
-                      if(err){
-                        console.log(err);
-                      }else{
-                        console.log("uploaded successfully");
-                      }
-                });
+                    if (matches.length !== 3) {
+                        return new Error('Invalid input string');
+                    }
 
-                var collection = db.collection('contentCollections');
+                    base64ImageResponse.type = matches[1];
+                    console.log(base64ImageResponse.type);
+                    var fileFormat = "." + base64ImageResponse.type.substring(6, base64ImageResponse.type.length);
+                    base64ImageResponse.data = new Buffer(matches[2], 'base64');
+                    var hash = crypto.createHash('md5').update(base64ImageResponse.data).digest('hex');
+                    var fileName = hash + fileFormat;
+                    console.log(hash);
+                    var photoFolder = req.body.category;
+                    require("fs").writeFile("public/uploaded-images/" + photoFolder + "/" + fileName, base64ImageResponse.data, 'base64', function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("uploaded successfully");
+                        }
+                    });
 
-                var content = {
-                    'category': req.body.category,
-                    'mediaType': req.body.mediaType,
-                    'newsTitle': req.body.newsTitle,
-                    'description': req.body.description,
-                    'imageName': fileName
+                    var content = {
+                        'category': req.body.category,
+                        'mediaType': req.body.mediaType,
+                        'newsTitle': req.body.newsTitle,
+                        'description': req.body.description,
+                        'imageName': fileName
+                    }
+                    collection.insert(content, function(err, result) {
+                        if (err) {
+                            console.log(err);
+                            res.send("failed");
+                            db.close();
+                        } else {
+                            console.log("Inserted content");
+                            res.send("success");
+                            db.close();
+                        }
+                    });
                 }
-
-                collection.insert(content, function(err, result) {
-                    if (err) {
-                        console.log(err);
-                        res.send("failed");
-                        db.close();
-                    } else {
-                        console.log("Inserted content");
-                        res.send("success");
-                        db.close();
-                    }
-                });
-
-              }
             }
         });
-
     } else {
-         res.sendFile(__dirname + "/" + "index.html");
+        res.sendFile(__dirname + "/" + "index.html");
         res.send('fail');
     }
 });
 
 
 var server = app.listen(8081, function() {
-
     var host = server.address().address
     var port = server.address().port
-
     console.log("Example app listening at http://%s:%s", host, port)
-
 });

@@ -25,6 +25,15 @@ $(document).ready(function() {
 
     });
 
+    $("#logout").off('click').on('click', function(e) {
+        $.get("/logout", function(data, status) {
+
+        }).done(function(data) {
+            alert(data);
+            window.location.href = "/admin-page.html";
+        });
+    });
+
 
     $("#crate-user-submit").off('click').on('click', function(e) {
 
@@ -133,23 +142,31 @@ $(document).ready(function() {
     });
 
     $("#file-upload-submit").off('click').on('click', function(e) {
-
+        $(".error-pan").text("Upload Inprogress..");
         var category = $("#category").val();
         var mediaType = $("#choose-media").val();
-        var newsTitle = $("#news-title").val();
-        var description = $("#description").val();
+        var newsTitle = $("#news-title").val().trim();
+        var description = $("#description").val().trim();
 
         var file = $("#uploaded-image");
-        /* 	if(file.val() ==""){
-			alert("Please choose image");
-			return;
-		}else{
-
-		}*/
+        if (!newsTitle) {
+            $(".error-pan").text("Please provide News title.");
+            $("#news-title").focus();
+            return;
+        } else if (!description) {
+            $(".error-pan").text("Please provide News description.");
+            $("#description").focus();
+            return;
+        }
 
         if (mediaType == 'video') {
             //alert(category);
             var videoUrl = $("#uploaded-video-url").val();
+            if (!videoUrl) {
+                $(".error-pan").text("Please provide video URL.");
+                $("#uploaded-video-url").focus();
+                return;
+            }
             var data = {
                 'category': category,
                 'mediaType': mediaType,
@@ -168,84 +185,79 @@ $(document).ready(function() {
                 dataType: 'json',
                 //Ajax events
                 success: function(data) {
-                  //  alert(String(data));
-                  if(data.responseText == "success" || data.status == 413){
-                    alert(data.status+" Uploaded Content successfully");
-                  }else{
-                    alert(data.responseText);
-                  }
+                    //  alert(String(data));
+                    if (data.responseText == "success" || data.status == 413) {
+                        alert(data.status + " Uploaded Content successfully");
+                    } else {
+                        alert(data.responseText);
+                    }
                 },
                 error: function(data) {
-                  //  alert(String(data));
-                  if(data.responseText == "success" || data.status == 413){
-                    alert(data.status+" Uploaded Content successfully");
-                  }else{
-                    alert(data.responseText);
-                  }
+                    //  alert(String(data));
+                    if (data.responseText == "success" || data.status == 413) {
+                        alert(data.status + " Uploaded Content successfully");
+                    } else {
+                        alert(data.responseText);
+                    }
                 },
-                complete: function(){
-                  $("#uploaded-image").val("");
-                  $('input[type=text], textarea').val("");
+                complete: function() {
+                    $("#uploaded-image").val("");
+                    $('input[type=text], textarea').val("");
                 }
             });
-        }else{
+        } else {
+            var file = $("#uploaded-image");
+            if (file.val() == "") {
+                $(".error-pan").text("Please select an Image to Upload.");
+                return;
+            }
+            var data = {
+                'category': category,
+                'mediaType': mediaType,
+                'newsTitle': newsTitle,
+                'description': description,
+                'videoUrl': videoUrl,
+                'mediaType': mediaType
+            };
+            //alert(category);
+            var image = document.querySelector('input[type=file]').files[0];
+            //$("#uploaded-image");
+            var reader = new FileReader();
+            reader.readAsDataURL(image);
 
-          var data = {
-              'category': category,
-              'mediaType': mediaType,
-              'newsTitle': newsTitle,
-              'description': description,
-              'videoUrl': videoUrl,
-              'mediaType': mediaType
-          };
-          //alert(category);
-          var image = document.querySelector('input[type=file]').files[0];
-          //$("#uploaded-image");
-          var reader  = new FileReader();
-          reader.readAsDataURL(image);
-
-          reader.addEventListener("load", function () {
-          //  alert(reader.result);
-            data["image"] = reader.result;
-            $.ajax({
-                url: 'uploading-content', //Server script to process data
-                type: 'POST',
-
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                //contentType: "application/x-www-form-urlencoded",
-                dataType: 'json',
-                //Ajax events
-                success: function(data) {
-                  //  alert(String(data));
-                  if(data.responseText == "success" || data.status == 413){
-                    alert(data.status+" Uploaded Content successfully");
-                  }else{
-                    alert(data.responseText);
-                  }
-                },
-                error: function(data) {
-                  //  alert(String(data));
-                  if(data.responseText == "success" || data.status == 413){
-                    alert(data.status+" Uploaded Content successfully");
-                  }else{
-                    alert(data.responseText);
-                  }
-                },
-                complete: function(){
-                  $("#uploaded-image").val("");
-                  $('input[type=text], textarea').val("");
-                }
-            });
-          }, false);
-
-
-
-
-
+            reader.addEventListener("load", function() {
+                //  alert(reader.result);
+                data["image"] = reader.result;
+                $.ajax({
+                    url: 'uploading-content', //Server script to process data
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    //contentType: "application/x-www-form-urlencoded",
+                    dataType: 'json',
+                    //Ajax events
+                    success: function(data) {
+                        //  alert(String(data));
+                        if (data.responseText == "success" || data.status == 413) {
+                            alert(data.status + " Uploaded Content successfully");
+                        } else {
+                            alert(data.responseText);
+                        }
+                    },
+                    error: function(data) {
+                        //  alert(String(data));
+                        if (data.responseText == "success" || data.status == 413) {
+                            alert(data.status + " Uploaded Content successfully");
+                        } else {
+                            alert(data.responseText);
+                        }
+                    },
+                    complete: function() {
+                        $("#uploaded-image").val("");
+                        $('input[type=text], textarea').val("");
+                    }
+                });
+            }, false);
         }
     });
-
-
-
 });
