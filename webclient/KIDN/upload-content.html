@@ -10,10 +10,11 @@
 </head>
 
 <body>
+  <div id="form-container">
   <div id="logout-div">
   	<input id="logout" type="button" value="Log Out">
   </div>
-    <h3>Create New Content</h3>
+    <h3 class="kid-news-heading small">Upload New Content</h3>
     <div>
         <div class="error-pan"></div>
         <div class="form-field-label first">Category :</div>
@@ -45,13 +46,14 @@
         <br>
         <div class="form-field-label description">Description:</div>
         <div class="form-field-value">
-            <textarea id="description" placeholder="Enter Description" maxlength="1500"  rows="10" cols="100" required>
+            <textarea id="description" placeholder="Enter Description" maxlength="600"  rows="2" cols="50" required>
             </textarea>
         </div>
         <br>
         <a id="create-edit-back-button" href="/admin-page.html">↵ Back</a>
         <input id="file-upload-submit" class="submit-btn" type="button" value="Submit"> </div>
         <div id="output"/>
+</div>
 </body>
 
 </html>
