@@ -373,6 +373,102 @@ app.post('/uploading-content', function(req, res) {
   }
 });
 
+app.get('/getInternational', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      var collection = db.collection('InternationalContents');
+      collection.find( { $and: [ { '_id': { $gte: parseInt(req.query.from) } }, { '_id': { $lte: parseInt(req.query.to) } } ] } ).toArray(function(err, result){
+        if(err){console.log(err);
+          res.send("noRecordsFound");}
+          else if (result.length){res.send(result);}
+        else{res.send("noUpdates");}
+        db.close();
+      });
+    }
+  });
+});
+app.get('/getNationalPoliticalContents', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      var collection = db.collection('NationalPoliticalContents');
+      collection.find( { $and: [ { '_id': { $gte: parseInt(req.query.from) } }, { '_id': { $lte: parseInt(req.query.to) } } ] } ).toArray(function(err, result){
+        if(err){console.log(err);
+          res.send("noRecordsFound");}
+          else if (result.length){res.send(result);}
+        else{res.send("noUpdates");}
+        db.close();
+      });
+    }
+  });
+});
+app.get('/getNationalSocialContents', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      var collection = db.collection('NationalSocialContents');
+      collection.find( { $and: [ { '_id': { $gte: parseInt(req.query.from) } }, { '_id': { $lte: parseInt(req.query.to) } } ] } ).toArray(function(err, result){
+        if(err){console.log(err);
+          res.send("noRecordsFound");}
+          else if (result.length){res.send(result);}
+        else{res.send("noUpdates");}
+        db.close();
+      });
+    }
+  });
+});
+app.get('/getEntertainmentContents', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      var collection = db.collection('EntertainmentContents');
+      collection.find( { $and: [ { '_id': { $gte: parseInt(req.query.from) } }, { '_id': { $lte: parseInt(req.query.to) } } ] } ).toArray(function(err, result){
+        if(err){console.log(err);
+          res.send("noRecordsFound");}
+          else if (result.length){res.send(result);}
+        else{res.send("noUpdates");}
+        db.close();
+      });
+    }
+  });
+});
+app.get('/getScienceAndTechContents', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      var collection = db.collection('ScienceAndTechContents');
+      collection.find( { $and: [ { '_id': { $gte: parseInt(req.query.from) } }, { '_id': { $lte: parseInt(req.query.to) } } ] } ).toArray(function(err, result){
+        if(err){console.log(err);
+          res.send("noRecordsFound");}
+          else if (result.length){res.send(result);}
+        else{res.send("noUpdates");}
+        db.close();
+      });
+    }
+  });
+});
+app.get('/getSportsContents', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+      var collection = db.collection('SportsContents');
+      collection.find( { $and: [ { '_id': { $gte: parseInt(req.query.from) } }, { '_id': { $lte: parseInt(req.query.to) } } ] } ).toArray(function(err, result){
+        if(err){console.log(err);
+          res.send("noRecordsFound");}
+          else if (result.length){res.send(result);}
+        else{res.send("noUpdates");}
+        db.close();
+      });
+    }
+  });
+});
 
 var server = app.listen(8081, function() {
   var host = server.address().address
