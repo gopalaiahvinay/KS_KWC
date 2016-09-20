@@ -10,6 +10,6 @@ dump.rdb
 
 /jshint_error.log
 webclient/KIDN/node_modules
-webclient/KIDN//components
+webclient/KIDN/components
 /bin
 
