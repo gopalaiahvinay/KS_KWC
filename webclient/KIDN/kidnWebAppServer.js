@@ -76,7 +76,7 @@ app.post('/loginattempt', function(req, res) {
       var collection = db.collection('users');
 
       // Insert some users
-      return collection.find({
+      collection.find({
         userEmail: req.query.userName
       }).toArray(function(err, result) {
         if (err) {
@@ -93,11 +93,13 @@ app.post('/loginattempt', function(req, res) {
             }
             res.send("pass");
           } else {
-            console.log("Invalid user");
-            res.send("fail");
+            console.log("Invalid Password");
+            res.send("Invalid Password");
           }
         } else {
-          console.log('No document(s) found with defined "find" criteria!');
+          console.log('No user found with defined emailId');
+          console.log("Invalid user");
+          res.send("fail");
         }
         //Close connection
         db.close();
@@ -300,7 +302,9 @@ app.post('/uploading-content', function(req, res) {
               'mediaType': req.body.mediaType,
               'newsTitle': req.body.newsTitle,
               'description': req.body.description,
-              'videoUrl': req.body.videoUrl
+              'videoUrl': req.body.videoUrl,
+              'originalNewsURL':req.body.originalNewsURL,
+              'authorName': req.body.authorName 
             }
             collection.insert(content, function(err, result) {
               if (err) {
@@ -348,7 +352,9 @@ app.post('/uploading-content', function(req, res) {
               'mediaType': req.body.mediaType,
               'newsTitle': req.body.newsTitle,
               'description': req.body.description,
-              'imageName': fileName
+              'imageName': fileName,
+              'originalNewsURL':req.body.originalNewsURL,
+              'authorName': req.body.authorName 
             }
             collection.insert(content, function(err, result) {
               if (err) {

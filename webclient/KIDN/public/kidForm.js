@@ -8,10 +8,11 @@ $(document).ready(function() {
         }).done(function(data) {
             //alert(data);
             if (data == "fail") {
-
+                $(".error-pan").text("Please provide valid - 'User Email'");
                 //alert("Login Authentication Failed, \nUser Name or Password may be wrong");
-            }
-            if (data == "pass") {
+            }else if(data == "Invalid Password"){
+                $(".error-pan").text(data);
+            }else if (data == "pass") {
                 console.log("respond", data);
                 //alert(data);
                 window.location.href = "/admin-page.html";
@@ -147,6 +148,8 @@ $(document).ready(function() {
         var mediaType = $("#choose-media").val();
         var newsTitle = $("#news-title").val().trim();
         var description = $("#description").val().trim();
+        var originalNewsURL = $("#original-news-url").val().trim();
+        var authorName = $("#author-name").val().trim();
 
         var file = $("#uploaded-image");
         if (!newsTitle) {
@@ -157,7 +160,15 @@ $(document).ready(function() {
             $(".error-pan").text("Please provide News description.");
             $("#description").focus();
             return;
-        }
+        }  else if (!originalNewsURL) {
+            $(".error-pan").text("Please provide Original News URL.");
+            $("##original-news-url").focus();
+            return;
+        }  else if (!authorName) {
+            $(".error-pan").text("Please provide Author Name.");
+            $("#author-name").focus();
+            return;
+        } 
 
         if (mediaType == 'video') {
             //alert(category);
@@ -173,7 +184,9 @@ $(document).ready(function() {
                 'newsTitle': newsTitle,
                 'description': description,
                 'videoUrl': videoUrl,
-                'mediaType': mediaType
+                'mediaType': mediaType,
+                'originalNewsURL':originalNewsURL,
+                'authorName': authorName 
             };
             $.ajax({
                 url: 'uploading-content', //Server script to process data
@@ -187,7 +200,8 @@ $(document).ready(function() {
                 success: function(data) {
                     //  alert(String(data));
                     if (data.responseText == "success" || data.status == 413) {
-                        alert(data.status + " Uploaded Content successfully");
+                        //alert(data.status + " Uploaded Content successfully");
+                        $(".error-pan").text("Uploaded Content successfully");
                     } else {
                         alert(data.responseText);
                     }
@@ -195,7 +209,8 @@ $(document).ready(function() {
                 error: function(data) {
                     //  alert(String(data));
                     if (data.responseText == "success" || data.status == 413) {
-                        alert(data.status + " Uploaded Content successfully");
+                        //alert(data.status + " Uploaded Content successfully");
+                        $(".error-pan").text("Uploaded Content successfully");
                     } else {
                         alert(data.responseText);
                     }
@@ -217,7 +232,9 @@ $(document).ready(function() {
                 'newsTitle': newsTitle,
                 'description': description,
                 'videoUrl': videoUrl,
-                'mediaType': mediaType
+                'mediaType': mediaType,
+                'originalNewsURL':originalNewsURL,
+                'authorName': authorName 
             };
             //alert(category);
             var image = document.querySelector('input[type=file]').files[0];
@@ -239,7 +256,8 @@ $(document).ready(function() {
                     success: function(data) {
                         //  alert(String(data));
                         if (data.responseText == "success" || data.status == 413) {
-                            alert(data.status + " Uploaded Content successfully");
+                           // alert(data.status + " Uploaded Content successfully");
+                           $(".error-pan").text("Uploaded Content successfully");
                         } else {
                             alert(data.responseText);
                         }
@@ -247,7 +265,8 @@ $(document).ready(function() {
                     error: function(data) {
                         //  alert(String(data));
                         if (data.responseText == "success" || data.status == 413) {
-                            alert(data.status + " Uploaded Content successfully");
+                           // alert(data.status + " Uploaded Content successfully");
+                           $(".error-pan").text("Uploaded Content successfully");
                         } else {
                             alert(data.responseText);
                         }
