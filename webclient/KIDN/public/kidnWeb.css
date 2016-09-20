@@ -23,6 +23,10 @@ h3 {
 	height: 500px;
 }
 
+#form-container.uploadContent{
+	height: auto;
+}
+
 .form-field-label{
 	display: inline-block;
 	margin: 3% 0% 0% 32%;
