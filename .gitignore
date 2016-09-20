@@ -1,0 +1,15 @@
+target/
+.DS_Store
+.settings/*.prefs
+.classpath
+dump.rdb
+/bin
+.idea
+.vscode
+*.iml
+
+/jshint_error.log
+webclient/KIDN/node_modules
+webclient/KIDN//components
+/bin
+
