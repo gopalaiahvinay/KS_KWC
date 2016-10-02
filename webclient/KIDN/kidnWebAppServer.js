@@ -292,19 +292,48 @@ app.post('/uploading-content', function(req, res) {
           var collection = db.collection('ContentCollections');
         }
         var sequence=0, count1=0;
+        var date = new Date();
         if (req.body.mediaType == 'video') {
           console.log("Entered video")
           collection.count(function(err, count) {
             sequence = count+1;
+            var base64Image = req.body.thumbnail;
+
+            var matches = base64Image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+            base64ImageResponse = {};
+
+            if (matches.length !== 3) {
+              return new Error('Invalid input string');
+            }
+
+            base64ImageResponse.type = matches[1];
+            //console.log(base64ImageResponse.type);
+            var fileFormat = "." + base64ImageResponse.type.substring(6, base64ImageResponse.type.length);
+            base64ImageResponse.data = new Buffer(matches[2], 'base64');
+            var hash = crypto.createHash('md5').update(base64ImageResponse.data).digest('hex');
+            var thumbnailName = hash + fileFormat;
+            //console.log(hash);
+            var photoFolder = req.body.category;
+            require("fs").writeFile("public/uploaded-images/" + photoFolder + "/" + thumbnailName, base64ImageResponse.data, 'base64', function(err) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("uploaded successfully");
+              }
+            });
             var content = {
               '_id':sequence,
+              'date':date,
               'category': req.body.category,
               'mediaType': req.body.mediaType,
+              'imageName': 'nothing',
+              'videoUrl': req.body.videoUrl,
+              'thumbnailName':thumbnailName ,
               'newsTitle': req.body.newsTitle,
               'description': req.body.description,
-              'videoUrl': req.body.videoUrl,
               'originalNewsURL':req.body.originalNewsURL,
-              'authorName': req.body.authorName 
+              'authorName': req.body.authorName,
+              
             }
             collection.insert(content, function(err, result) {
               if (err) {
@@ -335,10 +364,10 @@ app.post('/uploading-content', function(req, res) {
             var fileFormat = "." + base64ImageResponse.type.substring(6, base64ImageResponse.type.length);
             base64ImageResponse.data = new Buffer(matches[2], 'base64');
             var hash = crypto.createHash('md5').update(base64ImageResponse.data).digest('hex');
-            var fileName = hash + fileFormat;
+            var imageName = hash + fileFormat;
             //console.log(hash);
             var photoFolder = req.body.category;
-            require("fs").writeFile("public/uploaded-images/" + photoFolder + "/" + fileName, base64ImageResponse.data, 'base64', function(err) {
+            require("fs").writeFile("public/uploaded-images/" + photoFolder + "/" + imageName, base64ImageResponse.data, 'base64', function(err) {
               if (err) {
                 console.log(err);
               } else {
@@ -348,11 +377,14 @@ app.post('/uploading-content', function(req, res) {
 
             var content = {
               '_id':sequence,
+              'date':date,
               'category': req.body.category,
               'mediaType': req.body.mediaType,
+              'imageName': imageName,
+              'videoUrl': 'nothing',
+              'thumbnailName':'nothing',
               'newsTitle': req.body.newsTitle,
               'description': req.body.description,
-              'imageName': fileName,
               'originalNewsURL':req.body.originalNewsURL,
               'authorName': req.body.authorName 
             }

@@ -157,3 +157,7 @@ input[type="button"]{
 a.adminl:link {color:#00ff00;}
 a.adminl:visited {color:#00ff00;}
 a.adminl:hover {color:#ffcc00;}
+
+#video-content{
+	display: none;
+}

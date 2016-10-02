@@ -129,12 +129,18 @@ $(document).ready(function() {
 
     $("#choose-media").off('change').on('change', function(e) {
         var mediaValue = $("#choose-media").val();
+        $('input[type=file]').val("");
+        $("#uploaded-video-url").val("");
         if (mediaValue == "image") {
-            $("#file-upload-label").html("Upload Image:");
-            $("#file-upload-content").html("<input type='file' id='uploaded-image' name='pic' accept='image/*''>");
+            //$("#file-upload-label").html("Upload Image:");
+            //$("#file-upload-content").html("<input type='file' id='uploaded-image' name='pic' accept='image/*''>");
+            $("#video-content").hide(); 
+            $("#image-content").show();   
         } else if (mediaValue == "video") {
-            $("#file-upload-label").html("Enter Youtube URL:");
-            $("#file-upload-content").html("<input type='text' id='uploaded-video-url' placeholder='Please provide Youtube Embeded URL' maxlength='255' required>");
+           $("#video-content").show();
+           $("#image-content").hide();
+           // $("#file-upload-label").html("Enter Youtube URL:");
+           // $("#file-upload-content").html("<input type='text' id='uploaded-video-url' placeholder='Please provide Youtube Embeded URL' maxlength='255' required>");
         }
     });
 
@@ -143,7 +149,7 @@ $(document).ready(function() {
     });
 
     $("#file-upload-submit").off('click').on('click', function(e) {
-        $(".error-pan").text("Upload Inprogress..");
+        $(".error-pan").text("Please wait - Upload in progress..");
         var category = $("#category").val();
         var mediaType = $("#choose-media").val();
         var newsTitle = $("#news-title").val().trim();
@@ -172,6 +178,11 @@ $(document).ready(function() {
 
         if (mediaType == 'video') {
             //alert(category);
+            var file = $("#uploaded-thumbnail");
+            if (file.val() == "") {
+                $(".error-pan").text("Please select Video Thumnail.");
+                return;
+            }
             var videoUrl = $("#uploaded-video-url").val();
             if (!videoUrl) {
                 $(".error-pan").text("Please provide video URL.");
@@ -184,10 +195,19 @@ $(document).ready(function() {
                 'newsTitle': newsTitle,
                 'description': description,
                 'videoUrl': videoUrl,
-                'mediaType': mediaType,
                 'originalNewsURL':originalNewsURL,
                 'authorName': authorName 
             };
+            //alert(category);
+            var image = document.querySelectorAll('input[type=file]')[1].files[0];
+            //$("#uploaded-image");
+            var reader = new FileReader();
+            reader.readAsDataURL(image);
+
+            reader.addEventListener("load", function() {
+                //  alert(reader.result);
+            data["thumbnail"] = reader.result;
+            
             $.ajax({
                 url: 'uploading-content', //Server script to process data
                 type: 'POST',
@@ -201,25 +221,24 @@ $(document).ready(function() {
                     //  alert(String(data));
                     if (data.responseText == "success" || data.status == 413) {
                         //alert(data.status + " Uploaded Content successfully");
-                        $(".error-pan").text("Uploaded Content successfully");
+                        $(".error-pan").text("Uploaded News Title:"+newsTitle+" - successfully");
                     } else {
-                        alert(data.responseText);
+                       // alert(data.responseText);
                     }
                 },
                 error: function(data) {
                     //  alert(String(data));
                     if (data.responseText == "success" || data.status == 413) {
                         //alert(data.status + " Uploaded Content successfully");
-                        $(".error-pan").text("Uploaded Content successfully");
+                       $(".error-pan").text("Uploaded News Title:"+newsTitle+" - successfully");
                     } else {
-                        alert(data.responseText);
+                      //  alert(data.responseText);
                     }
                 },
                 complete: function() {
-                    $("#uploaded-image").val("");
-                    $('input[type=text], textarea').val("");
+                  $('input[type=text], textarea, input[type=file]').val("");
                 }
-            });
+            });}, false );
         } else {
             var file = $("#uploaded-image");
             if (file.val() == "") {
@@ -232,12 +251,11 @@ $(document).ready(function() {
                 'newsTitle': newsTitle,
                 'description': description,
                 'videoUrl': videoUrl,
-                'mediaType': mediaType,
                 'originalNewsURL':originalNewsURL,
                 'authorName': authorName 
             };
             //alert(category);
-            var image = document.querySelector('input[type=file]').files[0];
+            var image = document.querySelectorAll('input[type=file]')[0].files[0];
             //$("#uploaded-image");
             var reader = new FileReader();
             reader.readAsDataURL(image);
@@ -257,23 +275,22 @@ $(document).ready(function() {
                         //  alert(String(data));
                         if (data.responseText == "success" || data.status == 413) {
                            // alert(data.status + " Uploaded Content successfully");
-                           $(".error-pan").text("Uploaded Content successfully");
+                           $(".error-pan").text("Uploaded News Title:"+newsTitle+" - successfully");
                         } else {
-                            alert(data.responseText);
+                           // alert(data.responseText);
                         }
                     },
                     error: function(data) {
                         //  alert(String(data));
                         if (data.responseText == "success" || data.status == 413) {
                            // alert(data.status + " Uploaded Content successfully");
-                           $(".error-pan").text("Uploaded Content successfully");
+                           $(".error-pan").text("Uploaded News Title:"+newsTitle+" - successfully");
                         } else {
-                            alert(data.responseText);
+                           // alert(data.responseText);
                         }
                     },
                     complete: function() {
-                        $("#uploaded-image").val("");
-                        $('input[type=text], textarea').val("");
+                        $('input[type=text], textarea, input[type=file]').val("");
                     }
                 });
             }, false);

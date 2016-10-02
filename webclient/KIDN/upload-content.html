@@ -37,9 +37,19 @@
             </select>
         </div>
         <br>
-        <div id="file-upload-label" class="form-field-label">Image:</div>
-        <div id="file-upload-content" class="form-field-value"><input id="uploaded-image" type="file" name="pic" accept="image/*"></div>
-        <br>
+        <div id="image-content">
+            <div  class="form-field-label">Image:</div>
+            <div  class="form-field-value"><input id="uploaded-image" type="file" name="pic" accept="image/*"></div>
+            <br>
+        </div>
+        <div id="video-content">
+            <div  class="form-field-label">Enter Youtube URL:</div>
+            <div  class="form-field-value"><input type='text' id='uploaded-video-url' placeholder='Please provide Youtube Embeded URL' maxlength='255' required></div>
+            <br>
+            <div  class="form-field-label">Video Thumbnail:</div>
+            <div  class="form-field-value"><input id="uploaded-thumbnail" type="file" name="thumbnail" accept="image/*"></div>
+            <br>
+        </div>
         <div class="form-field-label">News Title:</div>
         <div class="form-field-value">
             <input type="text" id="news-title" placeholder="Enter News Title" maxlength="255" required> </div>
