@@ -250,7 +250,6 @@ $(document).ready(function() {
                 'mediaType': mediaType,
                 'newsTitle': newsTitle,
                 'description': description,
-                'videoUrl': videoUrl,
                 'originalNewsURL':originalNewsURL,
                 'authorName': authorName 
             };
